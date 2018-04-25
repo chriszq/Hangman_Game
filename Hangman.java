@@ -1,12 +1,3 @@
-// Hangman
-// no ArrayList or Collections used
-// randomly choose a word from a list of words.
-// stop when all the letters are guessed.
-// limited tries and stop after they run out.
-// display letters already guessed.
-
-//extra ideas: maybe add a visual hangman which changes based on the number of empty slots remaining on the miss array?
-
 import java.util.Scanner;
 import java.util.Random;
 import java.util.Arrays;
@@ -14,8 +5,6 @@ import java.io.*;
 
 public class Hangman
 {
-	//these 3 variables can now be accessed by all methods belonging to this class
-	//the accessibility of these variables makes it very convenient
 	private static char[] wordArray;
 	private static char[] miss;
 	private static char[] underscore;
