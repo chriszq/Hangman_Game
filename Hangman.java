@@ -1,181 +1,109 @@
-import java.io.File;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Random;
-import java.util.Scanner;
-
 public class Hangman {
+	
+	private static char[] word;
+	private static char[] miss;
+	private static char[] underscore;
 
-  private static char[] wordArray;
-  private static char[] miss;
-  private static char[] underscore;
-  private static int chances_remaining;
+	// constructor with argument, i.e. the solution is the argument
+	public Hangman(String str) {
+		
+		this.word = str.toCharArray();
 
-  public static void main(String[] args) throws IOException {
-    Scanner keyboard = new Scanner(System.in);
+		this.miss = new char[7];
+		
+		this.underscore = new char[str.length()];
 
-    do {
-        String word = pickWord();	//picks a random word from a list in a text file
-        wordArray = word.toCharArray();	//store the word as an array of characters
-        miss = new char[7];	//a string that stores all of the wrong guesses. This game assumes maximum of 7 wrong guesses
-        underscore = initUnderscore(wordArray.length);	//array which consists of underscores to represent each character of the selected word. Elements of this array will be changed to correctly guessed letters later on
-        chances_remaining = miss.length;
+		for (int i = 0; i < str.length(); i ++) {
+			this.underscore[i] = '_';
+		} 
+	}
 
-      while (chances_remaining > 0 && !Arrays.equals(wordArray, underscore)) {
-        System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-");	//separator
-        System.out.print("Word: ");
-        dispCharArray(underscore);
+	// start of get methods
+	public static char[] getWord() {
+		return word;
+	}
+					
+	public static char[] getMiss() {
+		return miss;
+	}
 
-        System.out.print("\nMisses: ");
-        dispCharArray(miss);
-        System.out.println("\nchances remaining: " + chances_remaining);
+	public static char[] getUnderscore() {
+		return underscore;
+	}
+	// end of get methods
+	
+	// start of data validation methods
+	// check if a char has any matches with word[]
+	public static void checkSolution(char c) {
+		boolean match = false;
 
-        System.out.print("\nGuess: ");
-        String temp = keyboard.nextLine();	//store the string input in this temporary variable
-        char guess = temp.charAt(0);	//convert the first charater of the string to a char
+		for (int i = 0; i < word.length; i ++) {
+			if (word[i] == c) {
+				underscore[i] = c;
+				match = true;
+			}
+		} 
 
-        while (inputLength(temp) || dupGuess(guess) || !alphaChar(guess)) {
-          temp = keyboard.nextLine();
-          guess = temp.charAt(0);
-        }
+		if (!match) {
+			for (int i = 0; i < miss.length; i ++) {
+				if (miss[i] == 0) {
+					miss[i] = c;
+					System.out.println(">> you guessed wrong ):");
+					// only first non-empty elt is modified
+					break;
+				}
+			}
+		}
+	}
+	
+	// check if char has not already been guessed
+	public static boolean checkDuplicate(char c) {
+		for (char x : miss) {
+			if (c == x) {
+				System.out.println(">> character already guessed (part of miss[])");
+				return true;
+			} 
+		}
+		
+		for (char x : underscore) {
+			if (c == x) {
+				System.out.println(">> character already guessed (part of underscore[])");
+				return true;
+			}
+		}
+		return false;
+	}
 
-        checkGuess(guess);
-        System.out.println();
-      }
+	// checks user input string is a valid character. then calls for further check methods
+	public static void checkInput(String str) {
+		if (!str.matches("[a-z]{1}")) {
+			System.out.println(">> invalid input, must be a lowercase alphabetical character");
+		} else {
 
-      System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-");	//separator
-      System.out.print("Answer: ");
-      dispCharArray(wordArray);
-      System.out.print("\nYour guess: ");
-      dispCharArray(underscore);
-      System.out.print("\nMisses: ");
-      dispCharArray(miss);
-      if (Arrays.equals(wordArray, underscore)) {
-        System.out.println("\nYOU GOT IT!");
-      } else {
-        System.out.println("\nYOU DIDN'T GET IT!");
-      }
-    } while (playAgain());
-  }
+				if (!checkDuplicate(str.charAt(0))) {
+					checkSolution(str.charAt(0));
+				}
+		}
+	}
+	//end of data validation methods
 
-  public static void dispCharArray(char[] arr) {
-    for (int i = 0; i < arr.length; i++) {
-      System.out.print(arr[i] + " ");
-    }
-  }
+	// start of general methods 
+	public static void showCharArray(char[] arr) {
+		for (int i = 0; i < arr.length; i ++) {
+			System.out.print(arr[i] + " ");
+		}
+	}
 
-  //initialises char array with underscores
-  public static char[] initUnderscore(int n) {
+	public int chances() {
+		int total = miss.length;
 
-    char[] arr = new char[n];
-
-    for (int i = 0; i < n; i ++) {
-      arr[i] = '_';
-    }
-    return arr;
-  }
-
-  //checks if a character has any matches in the wordArray
-  public static void checkGuess(char c) {
-    int match = 0;	//keeps track of the number of matches
-
-    //if matches then replace corresponding underscore with the character
-    for (int i = 0; i < wordArray.length; i++) {
-      if (wordArray[i] == c) {
-        underscore[i] = c;
-        match ++;
-      }
-    }
-
-    //if no matches then replace first available empty element in the miss array with wrongly guessed character
-    if (match == 0) {
-      chances_remaining--;	//reduces the number of chances by 1
-
-      for (int i = 0; i < miss.length; i++) {
-        if (miss[i] == 0) {
-          miss[i] = c;
-          //break here to ensure only the first available empty element is modified
-          break;
-        }
-      }
-    }
-  }
-
-  //check player input is not greater than 1
-  public static boolean inputLength(String str) {
-    if (str.length() > 1) {
-    System.out.print("input is too long. Try again: ");
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  //verifiying the guess is alphabetic
-  public static boolean alphaChar(char c) {
-    if (Character.isLetter(c)) {
-      return true;
-    } else {
-      System.out.print("character is not alphabetic. Try again: ");
-      return false;
-    }
-  }
-
-  //verifying that character has not already been guessed
-  public static boolean dupGuess(char c) {
-    for (int i = 0; i < miss.length; i++) {
-      if (miss[i] == c) {
-        System.out.print("character already guessed. Try again: ");
-        return true;
-      }
-    }
-
-    for (int i = 0; i < underscore.length; i++) {
-      if (underscore[i] == c) {
-        System.out.print("character already guessed. Try again: ");
-        return true;
-      }
-    }
-    return false;
-  }
-
-  //asks if the player wants to play again or quit
-  public static boolean playAgain() {
-    Scanner kb = new Scanner(System.in);
-    System.out.println("Play \"again\" or \"quit\" ?");
-    String str = kb.nextLine();
-
-  do
-    {
-      if (str.equals("again")) {
-        return true;
-      } else if (str.equals("quit")) {
-        return false;
-      } else {
-        System.out.print("invalid choice. Try again");
-        str = kb.nextLine();
-      }
-    } while(true);
-  }
-
-  // method that picks a random word from a text file
-  public static String pickWord() throws IOException {
-    // this text file contains the list of possible words to pick from
-    Scanner dataFile = new Scanner(new File("words.txt"));
-    Random r = new Random();
-    int count = 0;
-    // the text file has 213 lines each corresponding to a word
-    int solutionIndex = 1 + r.nextInt(212);
-    // System.out.println("The solution index is " + solutionIndex);
-
-    while (dataFile.hasNext() && count < solutionIndex - 1) {
-      count ++;
-      dataFile.nextLine();
-    }
-
-    String solution = dataFile.nextLine();
-
-    return solution;
-  }
+		for (char x : miss) {
+			if (x != 0) {
+				total --;
+			}
+		}
+		return total;
+	}
+	//end of general methods
 
 }
