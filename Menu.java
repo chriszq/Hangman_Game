@@ -4,20 +4,83 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Menu {
-// reserved
 
-	public static void loadMenu() {
+	private static boolean exit;
 
-		Scanner kb = new Scanner(System.in);
-
-		System.out.println("\n\t--Hangman Game--");
-		System.out.println("\noptions:\n");
-		System.out.println("\t(g)od mode");
-		System.out.println("\t(e)asy"    );
-		System.out.println("\t(m)edium"  );
-		System.out.println("\t(h)ard"    );
-		System.out.println("\t(p)vp"     );
-		
-		System.out.print("\nEnter option: ");
+	private static void printHeader() {
+		System.out.println("\t+--------------------+");
+		System.out.println("\t| Welcome to Hangman |");
+		System.out.println("\t+--------------------+");
 	}
+
+	private static void printMenu() {
+
+		System.out.println("\n  Select option:\n");
+		System.out.println("\t(0) Cheats (" + GameLogic.showCheatStatus() + ")");
+		System.out.println("\t(1) Easy"    );
+		System.out.println("\t(2) Medium"  );
+		System.out.println("\t(3) Hard"    );
+		System.out.println("\t(4) PvP"     );
+		System.out.println("\t(e) Exit"    );
+		
+	}
+
+	private static String getInput() {
+		Scanner kb = new Scanner(System.in);	
+		System.out.print("Enter option: ");
+		String str = kb.nextLine();
+
+		while (!str.matches("[0-4e]{1}")) {
+				System.out.print("Invalid option. Enter again : ");
+				str = kb.nextLine();
+		}	
+
+		return str;
+	}
+
+	private static void performOption(String str) throws IOException {
+
+		GameLogic gameLogic = new GameLogic();
+		
+		switch (str) {
+			case "0":
+				System.out.println("\ntoggling cheats");
+				GameLogic.setCheats();
+				break;
+			case "1":
+				System.out.println("\nloading easy mode");
+				GameLogic.setMode("easy.txt");
+				GameLogic.runGameMode(GameLogic.pickWord());
+				break;
+			case "2":
+				System.out.println("\nloading medium mode");
+				break;
+			case "3":
+				System.out.println("\nloading hard mode");
+				GameLogic.setMode("hard.txt");
+				GameLogic.runGameMode(GameLogic.pickWord());
+				break;
+			case "4":
+				System.out.println("\nloading pvp mode");
+				break;
+			case "e":
+				exit = true;
+				System.out.println("\nbye.");
+				break;
+			default:
+				System.out.println("never reaches here");
+		}
+	}
+
+	public static void runMenu() throws IOException {
+		printHeader();
+
+		while (!exit) {
+			printMenu();
+			String option = getInput();
+			performOption(option);	
+		}
+	}
+
+	
 }

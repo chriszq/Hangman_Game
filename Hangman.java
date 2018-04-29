@@ -30,6 +30,7 @@ public class Hangman {
 	public static char[] getUnderscore() {
 		return underscore;
 	}
+
 	// end of get methods
 	
 	// start of data validation methods
@@ -94,7 +95,7 @@ public class Hangman {
 		}
 	}
 
-	public int chances() {
+	public static int chances() {
 		int total = miss.length;
 
 		for (char x : miss) {
@@ -104,6 +105,18 @@ public class Hangman {
 		}
 		return total;
 	}
-	//end of general methods
+
+	public static int correctGuess() {
+		int total = 0;
+
+		for (char x : underscore) {
+			if (x != '_') {
+				total ++;
+			}
+		}
+		return total;
+	}
+
+		//end of general methods
 
 }
