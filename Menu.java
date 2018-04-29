@@ -38,6 +38,19 @@ public class Menu {
 		return str;
 	}
 
+	private static String getPvpWord() {
+		Scanner kb = new Scanner(System.in);
+		System.out.print("second player pick a word: ");
+		String str = kb.nextLine();
+
+		while (!str.matches("[a-z]+")) {
+			System.out.print("Invalid word (must be alphabetical, no uppercase)");
+			str = kb.nextLine();
+		}
+
+		return str;
+	}
+
 	private static void performOption(String str) throws IOException {
 
 		GameLogic gameLogic = new GameLogic();
@@ -54,6 +67,8 @@ public class Menu {
 				break;
 			case "2":
 				System.out.println("\nloading medium mode");
+				GameLogic.setMode("medium.txt");
+				GameLogic.runGameMode(GameLogic.pickWord());
 				break;
 			case "3":
 				System.out.println("\nloading hard mode");
@@ -62,6 +77,7 @@ public class Menu {
 				break;
 			case "4":
 				System.out.println("\nloading pvp mode");
+				GameLogic.runGameMode(getPvpWord());
 				break;
 			case "e":
 				exit = true;
