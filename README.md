@@ -2,8 +2,9 @@
 game of hangman
 
 * How to run
-	* Compile and run Game.java. Make sure a txt file is in the same directory. This file contains all of the potential solutions to the game.
-	* Currently the program only three lists of words (easy, medium and hard).
+	* Compile and run Game.java from command line. Make sure text files called "easy.txt", "medium.txt" and "hard.txt" are in the same directory.
+	* You can insert your own words into these files as long as the total number of words remains the same.
+
+* To do
+  * allow the text files to have any number of words
 	
-* Things to add/change later
-	* visually display a hangman which matches the number of guesses remaining
