@@ -61,14 +61,14 @@ public class Hangman {
 	public static boolean checkDuplicate(char c) {
 		for (char x : miss) {
 			if (c == x) {
-				System.out.println(">> character already guessed (part of miss[])");
+				System.out.println(">> character already guessed (not part of solution)");
 				return true;
 			} 
 		}
 		
 		for (char x : underscore) {
 			if (c == x) {
-				System.out.println(">> character already guessed (part of underscore[])");
+				System.out.println(">> character already guessed (part of solution)");
 				return true;
 			}
 		}
