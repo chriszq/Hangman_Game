@@ -68,12 +68,16 @@ public class GameLogic {
 		}
 
 		while (!Arrays.equals(test.getWord(), test.getUnderscore()) && test.chances() > 0) {
-		System.out.println("\n-=-=-=-=-=-=-=-=-=-=-=-=-=-");
+			System.out.println("\n-=-=-=-=-=-=-=-=-=-=-=-=-=-");
 			System.out.println("\nchances remaining: " + test.chances());
 			System.out.print("\nwrong guesses: ");
 			Hangman.showCharArray(test.getMiss());
 			System.out.print("\ncorrect guesses: ");
 			Hangman.showCharArray(test.getUnderscore());
+
+			System.out.println();
+			Picture.setLives(test.chances());
+			Picture.printPicture();
 
 			System.out.print("\ninput guess: ");
 			userInput = kb.nextLine();		
@@ -86,6 +90,10 @@ public class GameLogic {
 			Hangman.showCharArray(test.getMiss());
 			System.out.print("\ncorrect guesses (" + test.correctGuess() + "): ");
 			Hangman.showCharArray(test.getUnderscore());
+
+			System.out.println();
+			Picture.setLives(test.chances());
+			Picture.printPicture();
 
 			if (Arrays.equals(test.getWord(), test.getUnderscore())) {
 				System.out.println("\nYOU GOT IT!");
